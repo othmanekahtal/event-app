@@ -1,10 +1,11 @@
 <template>
-  <h1>Events for Good</h1>
-  <div class="events" v-if="events">
-    <EventCard v-for="event in events" :key="event.id" :event="event" />
+  <div v-if="event">
+    <h1>{{ event.title }}</h1>
+    <p>{{ event.time }} on {{ event.date }} @ {{ event.location }}</p>
+    <p>{{ event.description }}</p>
   </div>
   <div v-else>
-    <lord-icon
+<lord-icon
     src="https://cdn.lordicon.com/ulhdumaq.json"
     trigger="loop"
     colors="primary:#121331,secondary:#08a88a"
@@ -14,23 +15,18 @@
 </template>
 
 <script>
-import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService.js'
-
 export default {
-  name: 'EventList',
-  components: {
-    EventCard
-  },
+  props: ['id'],
   data() {
     return {
-      events: null
+      event: null
     }
   },
   created() {
-    EventService.getEvents()
+    EventService.getEvent(this.id)
       .then(response => {
-        this.events = response.data
+        this.event = response.data
       })
       .catch(error => {
         console.log(error)
@@ -38,11 +34,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.events {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-</style>
