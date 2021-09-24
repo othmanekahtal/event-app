@@ -7,6 +7,8 @@ import About from '../views/About.vue'
 import EventLayout from '../views/Event/Layout.vue'
 import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
+import nProgress from 'nprogress'
+import GBstore from '@/store/GBstore.js'
 
 const routes = [
   {
@@ -19,6 +21,25 @@ const routes = [
     path: '/events/:id/',
     component: EventLayout,
     props: true,
+    beforeEnter: (to, from, next) => {
+      EventService.getEvent(to.params.id)
+        .then((response) => {
+          GBstore.event = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error?.response.status === 404) {
+            return {
+              name: "404Resource",
+              params: { resource: "event" },
+            };
+          } else {
+            return {
+              name: "NetworkError",
+            };
+          }
+        });
+    },
     children: [
       {
         // '' empty path means: this component will be loaded at the root path of the parent
@@ -80,4 +101,10 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach(() => {
+  nProgress.start();
+})
+router.afterEach(() => {
+  nProgress.done();
+})
 export default router

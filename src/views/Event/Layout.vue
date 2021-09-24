@@ -7,6 +7,7 @@
     <router-link :to="{ name: 'EventEdit' }">edit</router-link>
   </div>
   <router-view :event="event" />
+  <p class="flash-message">{{ GBstore.message }}</p>
 </template>
 
 <script>
@@ -15,6 +16,7 @@ import EventService from "@/services/EventService.js";
 export default {
   name: "Layout",
   props: ["id"],
+  inject: ["GBstore"],
   data() {
     return {
       event: false,
@@ -41,3 +43,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.flash-message {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+</style>

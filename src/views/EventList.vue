@@ -33,7 +33,7 @@
 <script>
 import EventService from "@/services/EventService.js";
 import EventCard from "../components/EventCard.vue";
-import { watchEffect } from "vue";
+// import { watchEffect } from "vue";
 export default {
   name: "EventList",
   props: ["page"],
@@ -46,23 +46,50 @@ export default {
       totalEvents: 0,
     };
   },
-  created() {
-    // when we change the query vue reuse the component , to fix that :
-    watchEffect(() => {
-      // we will initial value of the events :
-      this.events = null;
-      console.log(this.page);
-      EventService.getEvents(2, this.page)
-        .then((response) => {
-          this.events = response.data;
-          this.totalEvents = response.headers["x-total-count"];
-        })
-        .catch(() => {
-          this.$router.push({
-            name: "NetworkError",
-          });
+  // created() {
+  //   // when we change the query vue reuse the component , to fix that :
+  //   watchEffect(() => {
+  //     // we will initial value of the events :
+  //     this.events = null;
+  //     console.log(this.page);
+  //     EventService.getEvents(2, this.page)
+  //       .then((response) => {
+  //         this.events = response.data;
+  //         this.totalEvents = response.headers["x-total-count"];
+  //       })
+  //       .catch(() => {
+  //         this.$router.push({
+  //           name: "NetworkError",
+  //         });
+  //       });
+  //   });
+  // },
+  beforeRouteEnter(to, _, next) {
+    EventService.getEvents(2, parseInt(to.query.page) || 1)
+      .then((response) => {
+        next((component) => {
+          component.events = response.data;
+          component.totalEvents = response.headers["x-total-count"];
         });
-    });
+      })
+      .catch(() => {
+        next({
+          name: "NetworkError",
+        });
+      });
+  },
+  beforeRouteUpdate(to) {
+    // return the promise so vue router knows to wait on the API call before loading the page
+    return EventService.getEvents(2, parseInt(to.query.page) || 1)
+      .then((response) => {
+        this.events = response.data;
+        this.totalEvents = response.headers["x-total-count"];
+      })
+      .catch(() => {
+        return {
+          name: "NetworkError",
+        };
+      });
   },
   computed: {
     HasNextPage() {

@@ -7,8 +7,13 @@
 export default {
   name: "Register",
   props: ["event"],
+  inject: ["GBstore"],
   methods: {
     registerMe() {
+      this.GBstore.message = `you are successfully registered for ${this.event.title} !`;
+      setTimeout(() => {
+        this.GBstore.message = "";
+      }, 3000);
       this.$router.push({
         name: "EventDetails",
         // by default vue take the param id
