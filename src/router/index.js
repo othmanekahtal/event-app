@@ -4,6 +4,7 @@ import EventDetails from '../views/Event/Details.vue'
 import EventRegister from '../views/Event/Register.vue'
 import EventEdit from '../views/Event/Edit.vue'
 import About from '../views/About.vue'
+import EventCreate from '../views/EventCreate.vue'
 import EventLayout from '../views/Event/Layout.vue'
 import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
@@ -17,6 +18,11 @@ const routes = [
     name: 'EventList',
     component: EventList,
     props: route => ({ page: parseInt(route.query.page) || 1 })
+  },
+  {
+    path: '/event/create',
+    name: 'EventCreate',
+    component: EventCreate
   },
   {
     path: '/events/:id/',
@@ -99,7 +105,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savePosition) {
+    return savePosition ? savePosition : { top: 0 }
+  }
 })
 
 router.beforeEach(() => {
