@@ -10,7 +10,7 @@ export default {
   inject: ["GBstore"],
   methods: {
     registerMe() {
-      this.GBstore.message = `you are successfully registered for ${this.event.title} !`;
+      this.GBstore.message = `you are successfully registered for ${this.GBstore.event.title} !`;
       setTimeout(() => {
         this.GBstore.message = "";
       }, 3000);

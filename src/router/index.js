@@ -9,6 +9,7 @@ import NotFound from '../views/NotFound.vue'
 import NetworkError from '../views/NetworkError.vue'
 import nProgress from 'nprogress'
 import GBstore from '@/store/GBstore.js'
+import EventService from '@/services/EventService.js';
 
 const routes = [
   {
@@ -21,8 +22,8 @@ const routes = [
     path: '/events/:id/',
     component: EventLayout,
     props: true,
-    beforeEnter: (to, from, next) => {
-      EventService.getEvent(to.params.id)
+    beforeEnter: (to) => {
+      return EventService.getEvent(to.params.id)
         .then((response) => {
           GBstore.event = response.data;
         })

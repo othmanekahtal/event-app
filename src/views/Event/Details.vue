@@ -1,8 +1,11 @@
 <template>
-  <div v-if="event">
-    <h1>{{ event.title }}</h1>
-    <p>{{ event.time }} on {{ event.date }} @ {{ event.location }}</p>
-    <p>{{ event.description }}</p>
+  <div v-if="GBstore.event">
+    <h1>{{ GBstore.event.title }}</h1>
+    <p>
+      {{ GBstore.event.time }} on {{ GBstore.event.date }} @
+      {{ GBstore.event.location }}
+    </p>
+    <p>{{ GBstore.event.description }}</p>
   </div>
   <div v-else>
     <lord-icon
@@ -18,6 +21,6 @@
 <script>
 export default {
   name: "Details",
-  props: ["event"],
+  inject: ["GBstore"],
 };
 </script>
